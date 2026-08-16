@@ -167,8 +167,8 @@ def view_tasks_flow(dm):
 
         category = dm.taskprioritylist[i] if i < len(dm.taskprioritylist) else ERROR
         grouped.setdefault(category, []).append(task)
-        ordered_categories = CATEGORY_ORDER + [c for c in grouped if c not in CATEGORY_ORDER]
-        
+
+    ordered_categories = CATEGORY_ORDER + [c for c in grouped if c not in CATEGORY_ORDER]
     for category in ordered_categories:
         tasks = grouped.get(category)
         if not tasks:
