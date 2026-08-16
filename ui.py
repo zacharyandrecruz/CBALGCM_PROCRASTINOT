@@ -92,12 +92,7 @@ def print_menu_title(title):
 def prompt(question):
     """
     Input prompt with "?" prefix
-
-    Args:
-        question (str): the question text (no trailing "?" needed).
-
-    Returns:
-        str: raw user input (not validated -- caller still validates).
+    
     """
     return input(GREEN + BRIGHT + "? " + RESET + WHITE + question + RESET + " ")
 
@@ -140,4 +135,5 @@ def print_category_header(label, category):
 
 
 def print_task_line(task, color):
-    print(color + f"  - {task.name} (due {task.date})" + RESET)
+    formatted_date = task.date.strftime("%b %d, %Y at %I:%M %p")
+    print(color + f"  - {task.name} (due {formatted_date})" + RESET)
