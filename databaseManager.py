@@ -42,12 +42,16 @@ class DatabaseManager:
         with open("tasklist.json", "w", encoding="utf-8") as f:
             json.dump([t.__dict__ for t in self.tasklist], f, default=str, indent=4)
 
-    def add_task(self, name : str, date : datetime, estimatedTime : int, group : bool, significant : bool):
+    def add_task(self, name : str, date : datetime, estimatedTime : int, group : bool, significant : bool, mood : int):
         new_task = Task(name, date, estimatedTime, group, significant)
         self.tasklist.append(new_task)
+        self.taskprioritylist.append(0)
+        self.calculate_task_priority(len(self.tasklist) - 1, mood)
 
     def remove_task(self, task : Task):
+        index = self.tasklist.index(task)
         self.tasklist.remove(task)
+        del self.taskprioritylist[index]
 
     def calculate_task_priority(self, index : int, mood : int):
 
@@ -65,6 +69,3 @@ class DatabaseManager:
         print(self.tasklist[index].name + " : " + str(input) + " : " + str(result))
 
         self.taskprioritylist[index] = result
-
-        
-
