@@ -2,12 +2,8 @@ import datetime
 import databaseManager
 
 dm = databaseManager.DatabaseManager()
-dm.load_tasklist()
+dm.load_tasklist(1)
 
-running = True
+#dm.add_task("Mega Important Project", datetime.datetime.now().__add__(datetime.timedelta(days=1)), 5, False, True)
 
-while(running):
-    print("YOU ARE RUNNING THE PROCRASTINOT PROGRAM\n")
-    choice = input()
-    if choice == "1":
-        running = False
+dm.save_tasklist()

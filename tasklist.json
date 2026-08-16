@@ -1,19 +1,22 @@
 [
     {
         "name": "Final Exam",
-        "date": "2026-08-18 08:00:00",
+        "date": "2026-08-21 20:33:22.427227",
+        "estimatedTime": 2,
         "group": false,
         "significant": true
     },
     {
-        "name": "Final Exam",
-        "date": "2026-08-18 08:00:00",
+        "name": "Small Quiz",
+        "date": "2026-08-18 20:34:00.691747",
+        "estimatedTime": 1,
         "group": false,
         "significant": true
     },
     {
-        "name": "Final Exam",
-        "date": "2026-08-18 08:00:00",
+        "name": "Mega Important Project",
+        "date": "2026-08-17 20:35:03.592302",
+        "estimatedTime": 5,
         "group": false,
         "significant": true
     }

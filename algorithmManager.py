@@ -21,9 +21,9 @@ class AlgorithmManager:
         "q_indiv_Urg_Important_4": "q_doNowHigh",
 
         "q_indiv_Urg_notImportant_1": "q_doNowLow",
-        "q_indiv_Urg_notImportant_2": "q_delegate",
-        "q_indiv_Urg_notImportant_3": "q_delegate",
-        "q_indiv_Urg_notImportant_4": "q_delegate",
+        "q_indiv_Urg_notImportant_2": "q_askForHelp",
+        "q_indiv_Urg_notImportant_3": "q_askForHelp",
+        "q_indiv_Urg_notImportant_4": "q_askForHelp",
 
         "q_indiv_notUrg_Important_1": "q_doNowLow",
         "q_indiv_notUrg_Important_2": "q_schedule",
