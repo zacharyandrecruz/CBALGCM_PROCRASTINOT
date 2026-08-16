@@ -1,4 +1,3 @@
-
 class AlgorithmManager:
 
     transitions = {
@@ -37,11 +36,16 @@ class AlgorithmManager:
 
     }
 
+    final_states = {"q_doNowHigh", "q_doNowLow", "q_schedule", "q_canProcrastinate", "q_delegate", "q_askForHelp"}
+
     def process_state_machine_algorithm(self, inputs):
 
         current_state = "q0"
 
         for char in inputs:
+
+            if current_state in self.final_states:
+                break
 
             key = f"{current_state}_{char}"
 
@@ -59,6 +63,3 @@ class AlgorithmManager:
             case "q_askForHelp": return 5
 
         return -1
-
-
-    
