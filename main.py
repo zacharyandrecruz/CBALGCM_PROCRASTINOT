@@ -3,12 +3,13 @@ CBALGCM Project — Main
 ---------------------------------------------
 
 Flow:
-    1. Ask mood once, at startup.
+    1. Show banner, ask mood once, at startup.
     2. Load tasklist with that mood (priorities calculated for existing tasks).
     3. Menu loop: add task / remove task / view tasks / quit.
 """
 
 import databaseManager
+import ui
 from input import (
     collect_deadline_datetime,
     is_delegatable,
@@ -40,17 +41,17 @@ def ask_mood_at_startup():
         int: mood value 1-4.
     """
     while True:
-        raw = input(
+        ui.print_info(
             "How are you feeling right now?\n"
             "  1 = motivated\n"
             "  2 = kinda tired\n"
             "  3 = super tired\n"
-            "  4 = burnt out\n"
-            "Enter a number (1-4): "
+            "  4 = burnt out"
         )
+        raw = ui.prompt("Enter a number (1-4):")
         mood = get_mood(raw)
         if mood == ERROR:
-            print("Please enter a number from 1 to 4.\n") #  Re-prompts on invalid input.
+            ui.print_error("Please enter a number from 1 to 4.\n")  # Re-prompts on invalid input.
             continue
         return mood
 
@@ -63,9 +64,9 @@ def ask_task_name():
         str: the task name.
     """
     while True:
-        name = input("Task name: ").strip()
+        name = ui.prompt("Task name:").strip()
         if not name:
-            print("Task name can't be empty.\n") # Re-prompts if left blank.
+            ui.print_error("Task name can't be empty.\n")  # Re-prompts if left blank.
             continue
         return name
 
@@ -78,19 +79,19 @@ def ask_estimated_time():
         float: estimated time to complete the task, in days.
     """
     while True:
-        raw = input("Estimated time to complete this task (in days): ")
+        raw = ui.prompt("Estimated time to complete this task (in days):")
         try:
             value = float(raw)
         except ValueError:
-            print("Please enter a number.\n")
+            ui.print_error("Please enter a number.\n")
             continue
         if value < 0:
-            print("Estimated time can't be negative.\n")
+            ui.print_error("Estimated time can't be negative.\n")
             continue
         return value
 
 
-def ask_yes_no(prompt, handler):
+def ask_yes_no(question, handler):
     """
     Yes/no prompt loop for is_delegatable() / has_significant_grade_impact().
     Re-prompts until a valid yes/no answer is given.
@@ -99,10 +100,10 @@ def ask_yes_no(prompt, handler):
         int: 1 or 0.
     """
     while True:
-        raw = input(f"{prompt} (yes/no): ")
+        raw = ui.prompt(f"{question} (yes/no):")
         result = handler(raw)
         if result == ERROR:
-            print("Please answer yes or no.\n")
+            ui.print_error("Please answer yes or no.\n")
             continue
         return result
 
@@ -111,7 +112,7 @@ def add_task_flow(dm, mood):
     """
     Collects all fields for a new task and adds it to the database.
     """
-    print("\n--- Add Task ---")
+    ui.print_section_header("Add Task")
     name = ask_task_name()
     deadline = collect_deadline_datetime()
     estimated_time = ask_estimated_time()
@@ -119,47 +120,52 @@ def add_task_flow(dm, mood):
     grade_impact = bool(ask_yes_no("Does this task have a significant impact on your grade?", has_significant_grade_impact))
 
     dm.add_task(name, deadline, estimated_time, delegatable, grade_impact, mood)
-    print(f"'{name}' added.\n")
+    ui.print_success(f"'{name}' added.\n")
+    ui.prompt("Press Enter to continue...")
 
 
 def remove_task_flow(dm):
     """
     Lists current tasks and removes the one the user picks by number.
     """
-    print("\n--- Remove Task ---")
+    ui.print_section_header("Remove Task")
     if not dm.tasklist:
-        print("No tasks to remove.\n")
+        ui.print_info("No tasks to remove.\n")
+        ui.prompt("Press Enter to continue...")
         return
 
     for i, task in enumerate(dm.tasklist):
-        print(f"{i + 1}. {task.name}")
+        ui.print_menu_option(i + 1, task.name)
 
     while True:
-        raw = input("Enter the number of the task to remove (or 0 to cancel): ")
+        raw = ui.prompt("Enter the number of the task to remove (or 0 to cancel):")
         try:
             choice = int(raw)
         except ValueError:
-            print("Please enter a number.\n")
+            ui.print_error("Please enter a number.\n")
             continue
 
         if choice == 0:
-            print("Cancelled.\n")
+            ui.print_info("Cancelled.\n")
+            ui.prompt("Press Enter to continue...")
             return
         if 1 <= choice <= len(dm.tasklist):
             removed = dm.tasklist[choice - 1]
             dm.remove_task(removed)
-            print(f"'{removed.name}' removed.\n")
+            ui.print_success(f"'{removed.name}' removed.\n")
+            ui.prompt("Press Enter to continue...")
             return
-        print("That number doesn't match a task. Try again.\n")
+        ui.print_error("That number doesn't match a task. Try again.\n")
 
 
 def view_tasks_flow(dm):
     """
-    Prints tasks grouped by category (final FSM state).
+    Prints tasks grouped by category (final FSM state), each in its own color.
     """
-    print("\n--- View Tasks ---")
+    ui.print_section_header("View Tasks")
     if not dm.tasklist:
-        print("No tasks to show.\n")
+        ui.print_info("No tasks to show.\n")
+        ui.prompt("Press Enter to continue...")
         return
 
     grouped = {}
@@ -174,25 +180,30 @@ def view_tasks_flow(dm):
         if not tasks:
             continue
         label = CATEGORY_LABELS.get(category, f"Unknown ({category})")
-        print(f"\n{label}:")
+        color = ui.print_category_header(label, category)
         for task in tasks:
-            print(f"  - {task.name} (due {task.date})")
+            ui.print_task_line(task, color)
     print()
+    ui.prompt("Press Enter to continue...")
 
 
 def main():
     dm = databaseManager.DatabaseManager()
 
+    ui.clear_screen()
+    ui.print_banner()
     mood = ask_mood_at_startup()
     dm.load_tasklist(mood)
 
     while True:
-        print("\n=== CBALGCM Task Manager ===")
-        print("1. Add a task")
-        print("2. Remove a task")
-        print("3. View tasks")
-        print("4. Quit")
-        choice = input("Choose an option (1-4): ").strip()
+        ui.clear_screen()
+        ui.print_banner()
+        ui.print_menu_title("PROCRASTINOT Task Manager")
+        ui.print_menu_option(1, "Add a task")
+        ui.print_menu_option(2, "Remove a task")
+        ui.print_menu_option(3, "View tasks")
+        ui.print_menu_option(4, "Quit")
+        choice = ui.prompt("Choose an option (1-4):").strip()
 
         if choice == "1":
             add_task_flow(dm, mood)
@@ -202,10 +213,10 @@ def main():
             view_tasks_flow(dm)
         elif choice == "4":
             dm.save_tasklist()
-            print("Goodbye!")
+            ui.print_success("Goodbye!")
             break
         else:
-            print("Please enter 1, 2, 3, or 4.\n")
+            ui.print_error("Please enter 1, 2, 3, or 4.\n")
 
 
 if __name__ == "__main__":
