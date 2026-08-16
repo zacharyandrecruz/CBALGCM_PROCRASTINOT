@@ -56,6 +56,7 @@ class AlgorithmManager:
             case "q_schedule" : return 2
             case "q_canProcrastinate" : return 3
             case "q_delegate" : return 4
+            case "q_askForHelp": return 5
 
         return -1
 
