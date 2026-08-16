@@ -31,3 +31,9 @@ class DatabaseManager:
         with open("tasklist.json", "w", encoding="utf-8") as f:
             json.dump([t.__dict__ for t in self.tasklist], f, default=str, indent=4)
 
+    def add_task():
+        pass
+
+    def remove_task():
+        pass
+
