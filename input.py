@@ -151,12 +151,6 @@ def _normalize_yes_no(value):
 
 def is_delegatable(value):
     """
-    1st boolean input: can this task be delegated / is it group work?
-
-    Args:
-        value: bool, int (0/1), or str ("yes"/"no", "y"/"n", "1"/"0") answer
-            to "can this task be delegated / is this task a group work?"
-
     Returns:
         int: 1  = yes
              0  = no
@@ -167,8 +161,6 @@ def is_delegatable(value):
 
 def has_significant_grade_impact(value):
     """
-    3rd boolean input: does this task have a significant impact on your grade?
-
     Args:
         value: bool, int (0/1), or str ("yes"/"no", "y"/"n", "1"/"0") answer
             to "does this task have a significant impact on your grade?"
@@ -187,16 +179,6 @@ def has_significant_grade_impact(value):
 
 def get_mood(value):
     """
-    Mood input: direct user selection, no calculation needed.
-
-    1 = motivated
-    2 = kinda tired
-    3 = super tired
-    4 = im deadge
-
-    Args:
-        value: int or str expected to be one of 1, 2, 3, 4.
-
     Returns:
         int = the mood value (1-4) if valid, 
         -1  = error
