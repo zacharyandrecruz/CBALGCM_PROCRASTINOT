@@ -66,6 +66,11 @@ class DatabaseManager:
 
         result = self.am.process_state_machine_algorithm(input)
 
+        """
         print(self.tasklist[index].name + " : " + str(input) + " : " + str(result))
 
+        """
+
         self.taskprioritylist[index] = result
+
+        
