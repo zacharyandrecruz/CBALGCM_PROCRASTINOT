@@ -25,7 +25,7 @@ CATEGORY_LABELS = {
     2: "Schedule",
     4: "Delegate",
     3: "Can Procrastinate",
-    ERROR: "Unclassified",
+    ERROR: "Error Found",
 }
 
 # Fixed display order for view_tasks_flow
