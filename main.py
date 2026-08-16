@@ -21,12 +21,15 @@ ERROR = -1
 CATEGORY_LABELS = {
     0: "Do Now (High Priority)",
     1: "Do Now (Low Priority)",
-    2: "Schedule",
-    3: "Can Procrastinate",
-    4: "Delegate",
     5: "Ask For Help",
+    2: "Schedule",
+    4: "Delegate",
+    3: "Can Procrastinate",
     ERROR: "Unclassified",
 }
+
+# Fixed display order for view_tasks_flow
+CATEGORY_ORDER = [0, 1, 5, 2, 4, 3, ERROR]
 
 
 def ask_mood_at_startup():
@@ -153,7 +156,6 @@ def remove_task_flow(dm):
 def view_tasks_flow(dm):
     """
     Prints tasks grouped by category (final FSM state).
-    Backbone only -- no formatting/design applied yet.
     """
     print("\n--- View Tasks ---")
     if not dm.tasklist:
@@ -162,12 +164,15 @@ def view_tasks_flow(dm):
 
     grouped = {}
     for i, task in enumerate(dm.tasklist):
-        # tasks added this session may not have a priority entry yet
-        # (known gap, see NOTE in add_task_flow)
+
         category = dm.taskprioritylist[i] if i < len(dm.taskprioritylist) else ERROR
         grouped.setdefault(category, []).append(task)
-
-    for category, tasks in grouped.items():
+        ordered_categories = CATEGORY_ORDER + [c for c in grouped if c not in CATEGORY_ORDER]
+        
+    for category in ordered_categories:
+        tasks = grouped.get(category)
+        if not tasks:
+            continue
         label = CATEGORY_LABELS.get(category, f"Unknown ({category})")
         print(f"\n{label}:")
         for task in tasks:
