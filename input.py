@@ -9,6 +9,7 @@ Handles all 4 raw user inputs feeding the FSM's boolean/mood transitions.
 2nd boolean input: is time until deadline > time it takes to do the task?
     Deadline is collected via collect_deadline_datetime() (prompts for year,
     month, day, hour, minute separately and returns a datetime object).
+    Task length is given in days.
     Output: 1 if time_left > time_required  (Not Urgent)
             0 if time_left <= time_required (Urgent)
            -1 if error (not a datetime object, bad task length, etc.)
@@ -67,16 +68,16 @@ def collect_deadline_datetime():
 # 2nd boolean input
 # ---------------------------------------------------------------------------
 
-def get_time_left_hours(deadline_datetime, current_datetime=None):
+def get_time_left_days(deadline_datetime, current_datetime=None):
     """
-    Calculates the number of hours remaining until the deadline.
+    Calculates the number of days remaining until the deadline.
 
     Args:
         deadline_datetime (datetime): The deadline, e.g. from collect_deadline_datetime().
         current_datetime (datetime, optional): Defaults to now if not provided.
 
     Returns:
-        float: hours remaining until deadline (can be negative if overdue).
+        float: days remaining until deadline (can be negative if overdue).
 
     Raises:
         TypeError: if deadline_datetime is not a datetime object.
@@ -90,36 +91,36 @@ def get_time_left_hours(deadline_datetime, current_datetime=None):
         current_datetime = datetime.now()
 
     delta = deadline_datetime - current_datetime
-    return delta.total_seconds() / 3600
+    return delta.total_seconds() / 86400
 
 
-def is_time_left_greater(deadline_datetime, task_length_hours, current_datetime=None):
+def is_time_left_greater(deadline_datetime, task_length_days, current_datetime=None):
     """
     2nd boolean input - is time until deadline > time it takes to do the task?
 
     Args:
         deadline_datetime (datetime): The task's deadline, e.g. from
             collect_deadline_datetime().
-        task_length_hours (float): Estimated hours required to complete the task.
+        task_length_days (float): Estimated days required to complete the task.
         current_datetime (datetime, optional): Defaults to now if not provided.
 
     Returns:
-        int: 1  if time_left > task_length_hours (Not Urgent)
-             0  if time_left <= task_length_hours (Urgent)
+        int: 1  if time_left > task_length_days (Not Urgent)
+             0  if time_left <= task_length_days (Urgent)
             -1  if an error occured
     """
     
-    if isinstance(task_length_hours, bool) or not isinstance(task_length_hours, (int, float)):
+    if isinstance(task_length_days, bool) or not isinstance(task_length_days, (int, float)):
         return ERROR
-    if task_length_hours < 0:
+    if task_length_days < 0:
         return ERROR
 
     try:
-        time_left_hours = get_time_left_hours(deadline_datetime, current_datetime)
+        time_left_days = get_time_left_days(deadline_datetime, current_datetime)
     except TypeError:
         return ERROR
 
-    return 1 if time_left_hours > task_length_hours else 0
+    return 1 if time_left_days > task_length_days else 0
 
 
 # ---------------------------------------------------------------------------
