@@ -94,7 +94,6 @@ def ask_estimated_time():
 def ask_yes_no(question, handler):
     """
     Yes/no prompt loop for is_delegatable() / has_significant_grade_impact().
-    Re-prompts until a valid yes/no answer is given.
 
     Returns:
         int: 1 or 0.
@@ -160,7 +159,7 @@ def remove_task_flow(dm):
 
 def view_tasks_flow(dm):
     """
-    Prints tasks grouped by category (final FSM state), each in its own color.
+    Prints tasks grouped by category.
     """
     ui.print_section_header("View Tasks")
     if not dm.tasklist:
