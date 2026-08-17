@@ -1,23 +1,30 @@
 [
     {
-        "name": "Final Exam",
-        "date": "2026-08-21 20:33:22.427227",
-        "estimatedTime": 2,
+        "name": "Zach Crashes A Car",
+        "date": "2026-08-20 12:00:00",
+        "estimatedTime": 0.0,
+        "group": true,
+        "significant": true
+    },
+    {
+        "name": "Erin Oversleeps",
+        "date": "2026-08-18 12:00:00",
+        "estimatedTime": 2.0,
         "group": false,
         "significant": true
     },
     {
-        "name": "Small Quiz",
-        "date": "2026-08-18 20:34:00.691747",
-        "estimatedTime": 1,
+        "name": "Alaine Kills A Cryptid",
+        "date": "2026-08-19 12:00:00",
+        "estimatedTime": 3.0,
         "group": false,
         "significant": true
     },
     {
-        "name": "Mega Important Project",
-        "date": "2026-08-17 20:35:03.592302",
-        "estimatedTime": 5,
+        "name": "Shin Is Balling",
+        "date": "2026-08-20 12:00:00",
+        "estimatedTime": 1.0,
         "group": false,
-        "significant": true
+        "significant": false
     }
 ]
