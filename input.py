@@ -2,32 +2,6 @@
 CBALGCM Project — Input Handlers
 ---------------------------------------------
 Handles all 4 raw user inputs feeding the FSM's boolean/mood transitions.
-
-1st boolean input: can this task be delegated / is this task a group work?
-    Output: 1 if yes, 0 if no, -1 if error
-
-2nd boolean input: is time until deadline > time it takes to do the task?
-    Deadline is collected via collect_deadline_datetime() (prompts for year,
-    month, day, hour, minute separately and returns a datetime object).
-    Task length is given in days.
-    Output: 1 if time_left > time_required  (Not Urgent)
-            0 if time_left <= time_required (Urgent)
-           -1 if error (not a datetime object, bad task length, etc.)
-
-3rd boolean input: does this task have a significant impact on your grade?
-    Output: 1 if yes, 0 if no, -1 if error
-
-Mood input: user's current mood/energy level
-    1 = motivated
-    2 = easy tasks only plz
-    3 = super tired
-    4 = im deadge
-    Output: 1-4 if valid, -1 if error
-
-Convention: -1 means something went wrong upstream (bad/unexpected input) and
-the task should NOT be passed into the FSM yet.
-
-(Sigma = {0,1,2,3,4}).
 """
 
 from datetime import datetime
@@ -71,16 +45,6 @@ def collect_deadline_datetime():
 def get_time_left_days(deadline_datetime, current_datetime=None):
     """
     Calculates the number of days remaining until the deadline.
-
-    Args:
-        deadline_datetime (datetime): The deadline, e.g. from collect_deadline_datetime().
-        current_datetime (datetime, optional): Defaults to now if not provided.
-
-    Returns:
-        float: days remaining until deadline (can be negative if overdue).
-
-    Raises:
-        TypeError: if deadline_datetime is not a datetime object.
     """
     if not isinstance(deadline_datetime, datetime):
         raise TypeError(
@@ -97,17 +61,7 @@ def get_time_left_days(deadline_datetime, current_datetime=None):
 def is_time_left_greater(deadline_datetime, task_length_days, current_datetime=None):
     """
     2nd boolean input - is time until deadline > time it takes to do the task?
-
-    Args:
-        deadline_datetime (datetime): The task's deadline, e.g. from
-            collect_deadline_datetime().
-        task_length_days (float): Estimated days required to complete the task.
-        current_datetime (datetime, optional): Defaults to now if not provided.
-
-    Returns:
-        int: 1  if time_left > task_length_days (Not Urgent)
-             0  if time_left <= task_length_days (Urgent)
-            -1  if an error occured
+    
     """
     
     if isinstance(task_length_days, bool) or not isinstance(task_length_days, (int, float)):
