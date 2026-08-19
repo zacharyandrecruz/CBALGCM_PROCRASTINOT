@@ -137,7 +137,8 @@ def print_category_header(label, category):
 TASK_TYPE_LABELS = {0: "Submit by", 1: "Prepare for"}
 
 
-def print_task_line(task, color):
+def print_task_line(task, color, has_conflict=False):
     formatted_date = task.date.strftime("%b %d, %Y at %I:%M %p")
     verb = TASK_TYPE_LABELS.get(getattr(task, "type", 0), "Due")
-    print(color + f"  - {task.name} ({verb} {formatted_date})" + RESET)
+    conflict_marker = " (!)" if has_conflict else ""
+    print(color + f"  - {task.name}{conflict_marker} ({verb} {formatted_date})" + RESET)

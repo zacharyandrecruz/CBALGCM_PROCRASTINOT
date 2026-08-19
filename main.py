@@ -8,6 +8,7 @@ Flow:
     3. Menu loop: add task / edit task / remove task / view tasks / quit.
 """
 from datetime import datetime
+from collections import defaultdict
 import databaseManager
 import ui
 from input import (
@@ -204,6 +205,26 @@ def ask_optional_deadline(current):
             return collect_deadline_datetime()
         ui.print_error("Please answer yes or no.\n")
 
+# fn for task flow 
+
+
+def find_type0_conflictTasks(tasklist):
+    """
+    Returns a set of indices for tasks that are type 0 ("Submit by")
+    and share their exact date/time with at least one other task.
+    """
+    by_date = defaultdict(list)
+    for i, task in enumerate(tasklist):
+        by_date[task.date].append(i)
+
+    conflict_indices = set()
+    for indices in by_date.values():
+        if len(indices) > 1:
+            for i in indices:
+                if tasklist[i].type == 0:
+                    conflict_indices.add(i)
+    return conflict_indices
+
 
 def add_task_flow(dm, mood):
     """
@@ -325,11 +346,12 @@ def view_tasks_flow(dm):
         ui.prompt("Press Enter to continue...")
         return
 
+    conflict_indices = find_type0_conflictTasks(dm.tasklist)
+
     grouped = {}
     for i, task in enumerate(dm.tasklist):
-
         category = dm.taskprioritylist[i] if i < len(dm.taskprioritylist) else ERROR
-        grouped.setdefault(category, []).append(task)
+        grouped.setdefault(category, []).append((task, i in conflict_indices))
 
     ordered_categories = CATEGORY_ORDER + [c for c in grouped if c not in CATEGORY_ORDER]
     for category in ordered_categories:
@@ -338,8 +360,8 @@ def view_tasks_flow(dm):
             continue
         label = CATEGORY_LABELS.get(category, f"Unknown ({category})")
         color = ui.print_category_header(label, category)
-        for task in tasks:
-            ui.print_task_line(task, color)
+        for task, has_conflict in tasks:          # <-- must unpack here
+            ui.print_task_line(task, color, has_conflict)
     print()
     ui.prompt("Press Enter to continue...")
 
@@ -358,6 +380,7 @@ def exportTasklist(dm):
         ui.print_success(f"{defaultFn}.json exported successfully!")
 
     ui.prompt("Press Enter to continue...")
+
         
 def main():
     dm = databaseManager.DatabaseManager()
