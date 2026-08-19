@@ -7,7 +7,7 @@ Flow:
     2. Load tasklist with that mood (priorities calculated for existing tasks).
     3. Menu loop: add task / edit task / remove task / view tasks / quit.
 """
-
+from datetime import datetime
 import databaseManager
 import ui
 from input import (
@@ -343,7 +343,22 @@ def view_tasks_flow(dm):
     print()
     ui.prompt("Press Enter to continue...")
 
+def exportTasklist(dm):
+    customFn = bool(ask_yes_no("Would you like to use a custom name?", _normalize_yes_no))
 
+    if customFn == 1:
+        filename = input("Enter custom filename: ")
+        dm.export_tasklist(filename)
+        ui.print_success(f"{filename}.json exported successfully!")
+
+    else:
+        now = datetime.now()
+        defaultFn = "tasklist" + "[" + str(now) + "]"
+        dm.export_tasklist(defaultFn)
+        ui.print_success(f"{defaultFn}.json exported successfully!")
+
+    ui.prompt("Press Enter to continue...")
+        
 def main():
     dm = databaseManager.DatabaseManager()
 
@@ -360,7 +375,8 @@ def main():
         ui.print_menu_option(2, "Edit a task")
         ui.print_menu_option(3, "Remove a task")
         ui.print_menu_option(4, "View tasks")
-        ui.print_menu_option(5, "Quit")
+        ui.print_menu_option(5, "Export task")
+        ui.print_menu_option(6, "Quit")
         choice = ui.prompt("Choose an option (1-5):").strip()
 
         if choice == "1":
@@ -375,6 +391,8 @@ def main():
         elif choice == "4":
             view_tasks_flow(dm)
         elif choice == "5":
+            exportTasklist(dm)
+        elif choice == "6":
             dm.save_tasklist()
             ui.print_success("Goodbye!")
             break
