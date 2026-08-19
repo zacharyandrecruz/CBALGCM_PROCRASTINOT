@@ -49,6 +49,15 @@ class DatabaseManager:
         self.taskprioritylist.append(0)
         self.calculate_task_priority(len(self.tasklist) - 1, mood)
 
+    def edit_task(self, index : int, name : str, date : datetime, estimatedTime : int, group : bool, significant : bool, mood : int, type : int):
+        self.tasklist[index].name = name
+        self.tasklist[index].date = date
+        self.tasklist[index].estimatedTime = estimatedTime
+        self.tasklist[index].group = group
+        self.tasklist[index].significant = significant
+        self.tasklist[index].type = type
+        self.calculate_task_priority(index, mood)
+
     def remove_task(self, task : Task):
         index = self.tasklist.index(task)
         self.tasklist.remove(task)
