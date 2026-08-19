@@ -133,7 +133,7 @@ def ask_optional_text(question, current):
     """
     Text prompt that keeps `current` if the user just presses Enter.
     """
-    raw = ui.prompt(f"{question} (Enter to keep '{current}'):")
+    raw = ui.prompt(f"{question} (Current name: '{current}'):")
     return current if raw.strip() == "" else raw.strip()
 
 
@@ -142,7 +142,7 @@ def ask_optional_estimated_time(current):
     Estimated-time prompt that keeps `current` if the user just presses Enter,
     """
     while True:
-        raw = ui.prompt(f"New estimated time in days (Enter to keep {current}):")
+        raw = ui.prompt(f"New estimated time in days (Current value: {current}):")
         if raw.strip() == "":
             return current
         try:
@@ -163,7 +163,7 @@ def ask_optional_yes_no(question, handler, current):
     """
     current_label = "yes" if current else "no"
     while True:
-        raw = ui.prompt(f"{question} (yes/no, Enter to keep '{current_label}'):")
+        raw = ui.prompt(f"{question} (Current value: '{current_label}'):")
         if raw.strip() == "":
             return int(bool(current))
         result = handler(raw)
@@ -180,7 +180,7 @@ def ask_optional_task_type(current):
     current_label = TASK_TYPE_LABELS.get(current, str(current))
     while True:
         ui.print_info("What kind of deadline is this?\n  0 = Submit by\n  1 = Prepare for")
-        raw = ui.prompt(f"Enter 0 or 1 (Enter to keep '{current_label}'):")
+        raw = ui.prompt(f"Enter 0 or 1 (Current value: '{current_label}'):")
         if raw.strip() == "":
             return current
         if raw.strip() in ("0", "1"):
@@ -195,7 +195,7 @@ def ask_optional_deadline(current):
     """
     formatted_current = current.strftime("%b %d, %Y at %I:%M %p")
     while True:
-        raw = ui.prompt(f"Change deadline? Currently {formatted_current} (yes/no, Enter to keep):")
+        raw = ui.prompt(f"Change deadline? (Current date & time: {formatted_current}):")
         answer = raw.strip().lower()
         if answer in ("", "n", "no"):
             return current
@@ -254,7 +254,7 @@ def edit_task_flow(dm, mood):
     index = choice - 1
     task = dm.tasklist[index]
 
-    ui.print_info(f"Editing '{task.name}'. Press Enter on any question to keep its current value.\n")
+    ui.print_info(f"\nEditing '{task.name}'. Type 'yes' to change its current value. Type 'no' or press Enter on any question to keep its current value.\n")
 
     name = ask_optional_text("New task name", task.name)
     deadline = ask_optional_deadline(task.date)
