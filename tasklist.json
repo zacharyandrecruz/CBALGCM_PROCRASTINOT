@@ -73,7 +73,7 @@
     },
     {
         "name": "CBAPDEV Project Proposal",
-        "date": "2026-08-25 14:30:00",
+        "date": "2026-08-20 14:30:00",
         "estimatedTime": 1.0,
         "group": true,
         "significant": true,
@@ -81,7 +81,7 @@
     },
     {
         "name": "CONFLICT Task",
-        "date": "2026-08-25 09:00:00",
+        "date": "2026-08-20 09:00:00",
         "estimatedTime": 1.0,
         "group": false,
         "significant": true,
@@ -89,7 +89,7 @@
     },
     {
         "name": "CONFLICT Task 2",
-        "date": "2026-08-25 09:00:00",
+        "date": "2026-08-20 09:00:00",
         "estimatedTime": 1.0,
         "group": false,
         "significant": true,
