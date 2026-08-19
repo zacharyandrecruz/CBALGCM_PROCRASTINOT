@@ -5,7 +5,7 @@ CBALGCM Project — Main
 Flow:
     1. Show banner, ask mood once, at startup.
     2. Load tasklist with that mood (priorities calculated for existing tasks).
-    3. Menu loop: add task / remove task / view tasks / quit.
+    3. Menu loop: add task / edit task / remove task / view tasks / quit.
 """
 
 import databaseManager
@@ -31,6 +31,9 @@ CATEGORY_LABELS = {
 
 # Fixed display order for view_tasks_flow
 CATEGORY_ORDER = [0, 1, 5, 2, 4, 3, ERROR]
+
+# type: 0 = "Submit by", 1 = "Prepare for"
+TASK_TYPE_LABELS = {0: "Submit by", 1: "Prepare for"}
 
 
 def ask_mood_at_startup():
@@ -107,6 +110,100 @@ def ask_yes_no(question, handler):
         return result
 
 
+def ask_task_type():
+    """
+    Prompts for the task's type: 0 = "Submit by", 1 = "Prepare for".
+
+    Returns:
+        int: 0 or 1.
+    """
+    while True:
+        ui.print_info("What kind of deadline is this?\n  0 = Submit by\n  1 = Prepare for")
+        raw = ui.prompt("Enter 0 or 1:").strip()
+        if raw in ("0", "1"):
+            return int(raw)
+        ui.print_error("Please enter 0 or 1.\n")
+
+
+# ---------------------------------------------------------------------------
+# Optional ("press Enter to keep current value") prompts, used by edit only
+# ---------------------------------------------------------------------------
+
+def ask_optional_text(question, current):
+    """
+    Text prompt that keeps `current` if the user just presses Enter.
+    """
+    raw = ui.prompt(f"{question} (Enter to keep '{current}'):")
+    return current if raw.strip() == "" else raw.strip()
+
+
+def ask_optional_estimated_time(current):
+    """
+    Estimated-time prompt that keeps `current` if the user just presses Enter,
+    """
+    while True:
+        raw = ui.prompt(f"New estimated time in days (Enter to keep {current}):")
+        if raw.strip() == "":
+            return current
+        try:
+            value = float(raw)
+        except ValueError:
+            ui.print_error("Please enter a number.\n")
+            continue
+        if value < 0:
+            ui.print_error("Estimated time can't be negative.\n")
+            continue
+        return value
+
+
+def ask_optional_yes_no(question, handler, current):
+    """
+    Yes/no prompt that keeps `current` (0 or 1 / bool) if the user just
+    presses Enter.
+    """
+    current_label = "yes" if current else "no"
+    while True:
+        raw = ui.prompt(f"{question} (yes/no, Enter to keep '{current_label}'):")
+        if raw.strip() == "":
+            return int(bool(current))
+        result = handler(raw)
+        if result == ERROR:
+            ui.print_error("Please answer yes or no.\n")
+            continue
+        return result
+
+
+def ask_optional_task_type(current):
+    """
+    Task-type prompt that keeps `current` if the user just presses Enter.
+    """
+    current_label = TASK_TYPE_LABELS.get(current, str(current))
+    while True:
+        ui.print_info("What kind of deadline is this?\n  0 = Submit by\n  1 = Prepare for")
+        raw = ui.prompt(f"Enter 0 or 1 (Enter to keep '{current_label}'):")
+        if raw.strip() == "":
+            return current
+        if raw.strip() in ("0", "1"):
+            return int(raw.strip())
+        ui.print_error("Please enter 0 or 1.\n")
+
+
+def ask_optional_deadline(current):
+    """
+    Deadline prompt that keeps `current` (a datetime) if the user answers no
+    to changing it
+    """
+    formatted_current = current.strftime("%b %d, %Y at %I:%M %p")
+    while True:
+        raw = ui.prompt(f"Change deadline? Currently {formatted_current} (yes/no, Enter to keep):")
+        answer = raw.strip().lower()
+        if answer in ("", "n", "no"):
+            return current
+        if answer in ("y", "yes"):
+            return collect_deadline_datetime()
+        ui.print_error("Please answer yes or no.\n")
+
+
 def add_task_flow(dm, mood):
     """
     Collects all fields for a new task and adds it to the database.
@@ -117,9 +214,57 @@ def add_task_flow(dm, mood):
     estimated_time = ask_estimated_time()
     delegatable = bool(ask_yes_no("Can this task be delegated / is it group work?", is_delegatable))
     grade_impact = bool(ask_yes_no("Does this task have a significant impact on your grade?", has_significant_grade_impact))
+    task_type = ask_task_type()
 
-    dm.add_task(name, deadline, estimated_time, delegatable, grade_impact, mood)
+    dm.add_task(name, deadline, estimated_time, delegatable, grade_impact, mood, task_type)
     ui.print_success(f"'{name}' added.\n")
+    ui.prompt("Press Enter to continue...")
+
+
+def edit_task_flow(dm, mood):
+    """
+    Lists current tasks, lets the user pick one by number, then walks through
+    each field letting them press Enter to keep the current value.
+    """
+    ui.print_section_header("Edit Task")
+    if not dm.tasklist:
+        ui.print_info("No tasks to edit.\n")
+        ui.prompt("Press Enter to continue...")
+        return
+
+    for i, task in enumerate(dm.tasklist):
+        ui.print_menu_option(i + 1, task.name)
+
+    while True:
+        raw = ui.prompt("Enter the number of the task to edit (or 0 to cancel):")
+        try:
+            choice = int(raw)
+        except ValueError:
+            ui.print_error("Please enter a number.\n")
+            continue
+
+        if choice == 0:
+            ui.print_info("Cancelled.\n")
+            ui.prompt("Press Enter to continue...")
+            return
+        if 1 <= choice <= len(dm.tasklist):
+            break
+        ui.print_error("That number doesn't match a task. Try again.\n")
+
+    index = choice - 1
+    task = dm.tasklist[index]
+
+    ui.print_info(f"Editing '{task.name}'. Press Enter on any question to keep its current value.\n")
+
+    name = ask_optional_text("New task name", task.name)
+    deadline = ask_optional_deadline(task.date)
+    estimated_time = ask_optional_estimated_time(task.estimatedTime)
+    delegatable = bool(ask_optional_yes_no("Can this task be delegated / is it group work?", is_delegatable, task.group))
+    grade_impact = bool(ask_optional_yes_no("Does this task have a significant impact on your grade?", has_significant_grade_impact, task.significant))
+    task_type = ask_optional_task_type(task.type)
+
+    dm.edit_task(index, name, deadline, estimated_time, delegatable, grade_impact, mood, task_type)
+    ui.print_success(f"'{name}' updated.\n")
     ui.prompt("Press Enter to continue...")
 
 
@@ -199,25 +344,29 @@ def main():
         ui.print_banner()
         ui.print_menu_title("PROCRASTINOT Task Manager")
         ui.print_menu_option(1, "Add a task")
-        ui.print_menu_option(2, "Remove a task")
-        ui.print_menu_option(3, "View tasks")
-        ui.print_menu_option(4, "Quit")
-        choice = ui.prompt("Choose an option (1-4):").strip()
+        ui.print_menu_option(2, "Edit a task")
+        ui.print_menu_option(3, "Remove a task")
+        ui.print_menu_option(4, "View tasks")
+        ui.print_menu_option(5, "Quit")
+        choice = ui.prompt("Choose an option (1-5):").strip()
 
         if choice == "1":
             add_task_flow(dm, mood)
             dm.save_tasklist()
         elif choice == "2":
-            remove_task_flow(dm)
+            edit_task_flow(dm, mood)
             dm.save_tasklist()
         elif choice == "3":
-            view_tasks_flow(dm)
+            remove_task_flow(dm)
+            dm.save_tasklist()
         elif choice == "4":
+            view_tasks_flow(dm)
+        elif choice == "5":
             dm.save_tasklist()
             ui.print_success("Goodbye!")
             break
         else:
-            ui.print_error("Please enter 1, 2, 3, or 4.\n")
+            ui.print_error("Please enter 1, 2, 3, 4, or 5.\n")
 
 
 if __name__ == "__main__":

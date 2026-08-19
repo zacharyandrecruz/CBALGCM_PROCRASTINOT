@@ -134,6 +134,10 @@ def print_category_header(label, category):
     return color
 
 
+TASK_TYPE_LABELS = {0: "Submit by", 1: "Prepare for"}
+
+
 def print_task_line(task, color):
     formatted_date = task.date.strftime("%b %d, %Y at %I:%M %p")
-    print(color + f"  - {task.name} (due {formatted_date})" + RESET)
+    verb = TASK_TYPE_LABELS.get(getattr(task, "type", 0), "Due")
+    print(color + f"  - {task.name} ({verb} {formatted_date})" + RESET)
