@@ -206,8 +206,10 @@ def main():
 
         if choice == "1":
             add_task_flow(dm, mood)
+            dm.save_tasklist()
         elif choice == "2":
             remove_task_flow(dm)
+            dm.save_tasklist()
         elif choice == "3":
             view_tasks_flow(dm)
         elif choice == "4":

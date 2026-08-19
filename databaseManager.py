@@ -38,8 +38,8 @@ class DatabaseManager:
             self.calculate_task_priority(self.tasklist.index(task), mood)
         
 
-    def save_tasklist(self):
-        with open("tasklist.json", "w", encoding="utf-8") as f:
+    def save_tasklist(self, name = "tasklist"):
+        with open(name + ".json", "w", encoding="utf-8") as f:
             json.dump([t.__dict__ for t in self.tasklist], f, default=str, indent=4)
 
     def add_task(self, name : str, date : datetime, estimatedTime : int, group : bool, significant : bool, mood : int):
@@ -52,6 +52,26 @@ class DatabaseManager:
         index = self.tasklist.index(task)
         self.tasklist.remove(task)
         del self.taskprioritylist[index]
+
+    def import_tasklist(self, name, mood : int):
+
+        try:
+            with open(name + ".json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                for item in data:
+                    if "date" in item and isinstance(item["date"], str):
+                        item["date"] = datetime.fromisoformat(item["date"])
+                    self.tasklist.append(Task(**item))
+                    self.taskprioritylist.append(0)
+                    self.calculate_task_priority(len(self.tasklist) - 1, mood)
+        except FileNotFoundError:
+            return -1
+
+        return 0
+        
+
+    def export_tasklist(self, name):
+        self.save_tasklist(name)
 
     def calculate_task_priority(self, index : int, mood : int):
 
