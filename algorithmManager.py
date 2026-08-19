@@ -26,17 +26,17 @@ class AlgorithmManager:
 
         "q_indiv_notUrg_Important_1": "q_doNowLow",
         "q_indiv_notUrg_Important_2": "q_schedule",
-        "q_indiv_notUrg_Important_3": "q_canProcrastinate",
-        "q_indiv_notUrg_Important_4": "q_canProcrastinate",
+        "q_indiv_notUrg_Important_3": "q_doSoon",
+        "q_indiv_notUrg_Important_4": "q_doSoon",
 
-        "q_indiv_notUrg_notImportant_1": "q_canProcrastinate",
-        "q_indiv_notUrg_notImportant_2": "q_canProcrastinate",
-        "q_indiv_notUrg_notImportant_3": "q_canProcrastinate",
-        "q_indiv_notUrg_notImportant_4": "q_canProcrastinate"
+        "q_indiv_notUrg_notImportant_1": "q_doSoon",
+        "q_indiv_notUrg_notImportant_2": "q_doSoon",
+        "q_indiv_notUrg_notImportant_3": "q_doSoon",
+        "q_indiv_notUrg_notImportant_4": "q_doSoon"
 
     }
 
-    final_states = {"q_doNowHigh", "q_doNowLow", "q_schedule", "q_canProcrastinate", "q_delegate", "q_askForHelp"}
+    final_states = {"q_doNowHigh", "q_doNowLow", "q_schedule", "q_doSoon", "q_delegate", "q_askForHelp"}
 
     def process_state_machine_algorithm(self, inputs):
 
@@ -58,7 +58,7 @@ class AlgorithmManager:
             case "q_doNowHigh" : return 0
             case "q_doNowLow" : return 1
             case "q_schedule" : return 2
-            case "q_canProcrastinate" : return 3
+            case "q_doSoon" : return 3
             case "q_delegate" : return 4
             case "q_askForHelp": return 5
 

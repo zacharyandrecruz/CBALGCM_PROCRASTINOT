@@ -25,7 +25,7 @@ CATEGORY_LABELS = {
     5: "Ask For Help",
     2: "Schedule",
     4: "Delegate",
-    3: "Can Procrastinate",
+    3: "Do Soon",
     ERROR: "Error Found",
 }
 
