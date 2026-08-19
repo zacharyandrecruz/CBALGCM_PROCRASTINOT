@@ -15,6 +15,7 @@ from input import (
     is_delegatable,
     has_significant_grade_impact,
     get_mood,
+    _normalize_yes_no
 )
 
 ERROR = -1
@@ -209,15 +210,27 @@ def add_task_flow(dm, mood):
     Collects all fields for a new task and adds it to the database.
     """
     ui.print_section_header("Add Task")
-    name = ask_task_name()
-    deadline = collect_deadline_datetime()
-    estimated_time = ask_estimated_time()
-    delegatable = bool(ask_yes_no("Can this task be delegated / is it group work?", is_delegatable))
-    grade_impact = bool(ask_yes_no("Does this task have a significant impact on your grade?", has_significant_grade_impact))
-    task_type = ask_task_type()
+    addType = bool(ask_yes_no("Would you like to import task/s from a .json file?", _normalize_yes_no))
 
-    dm.add_task(name, deadline, estimated_time, delegatable, grade_impact, mood, task_type)
-    ui.print_success(f"'{name}' added.\n")
+    if addType:
+        filename = input("Enter .json filename: ")
+        error = dm.import_tasklist(filename, mood)
+        if error == -1:
+            print(f"Error: {filename}.json can not be found.")
+        else:
+            ui.print_success(f"Tasks from '{filename}.json' added.\n")
+
+    else:
+        name = ask_task_name()
+        deadline = collect_deadline_datetime()
+        estimated_time = ask_estimated_time()
+        delegatable = bool(ask_yes_no("Can this task be delegated / is it group work?", is_delegatable))
+        grade_impact = bool(ask_yes_no("Does this task have a significant impact on your grade?", has_significant_grade_impact))
+        task_type = ask_task_type()
+
+        dm.add_task(name, deadline, estimated_time, delegatable, grade_impact, mood, task_type)
+        ui.print_success(f"'{name}' added.\n")
+
     ui.prompt("Press Enter to continue...")
 
 
