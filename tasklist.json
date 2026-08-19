@@ -1,30 +1,73 @@
 [
     {
-        "name": "Zach Crashes A Car",
-        "date": "2026-08-20 12:00:00",
-        "estimatedTime": 0.0,
+        "name": "CSMATH2 Quiz 1 Exam",
+        "date": "2026-08-20 09:00:00",
+        "estimatedTime": 1.0,
+        "group": false,
+        "significant": true
+    },
+    {
+        "name": "GELITWO Assignment",
+        "date": "2026-08-20 11:00:00",
+        "estimatedTime": 1.0,
+        "group": false,
+        "significant": false
+    },
+    {
+        "name": "CXSY101 Project Proposal",
+        "date": "2026-08-20 12:45:00",
+        "estimatedTime": 2.0,
         "group": true,
         "significant": true
     },
     {
-        "name": "Erin Oversleeps",
-        "date": "2026-08-18 12:00:00",
-        "estimatedTime": 2.0,
-        "group": false,
-        "significant": true
-    },
-    {
-        "name": "Alaine Kills A Cryptid",
-        "date": "2026-08-19 12:00:00",
-        "estimatedTime": 3.0,
-        "group": false,
-        "significant": true
-    },
-    {
-        "name": "Shin Is Balling",
-        "date": "2026-08-20 12:00:00",
+        "name": "CBETHIC Short Quiz",
+        "date": "2026-08-21 11:00:00",
         "estimatedTime": 1.0,
         "group": false,
         "significant": false
+    },
+    {
+        "name": "CSMATH2 Skim New Lesson",
+        "date": "2026-08-24 09:15:00",
+        "estimatedTime": 1.0,
+        "group": false,
+        "significant": false
+    },
+    {
+        "name": "GELITWO Read new reading thingy yeah",
+        "date": "2026-08-24 11:00:00",
+        "estimatedTime": 1.0,
+        "group": false,
+        "significant": false
+    },
+    {
+        "name": "CXSY101 Plan Project w/ Team",
+        "date": "2026-08-24 12:45:00",
+        "estimatedTime": 1.0,
+        "group": true,
+        "significant": false
+    },
+    {
+        "name": "CBINOV3 Reading Stuff",
+        "date": "2026-08-25 07:30:00",
+        "estimatedTime": 1.0,
+        "group": false,
+        "significant": false
+    },
+    {
+        "name": "CBETHIC Skim New Lesson",
+        "date": "2026-08-25 11:00:00",
+        "estimatedTime": 1.0,
+        "group": false,
+        "significant": false
+    },
+    {
+        "name": "CBAPDEV Project Proposal",
+        "date": "2026-08-25 14:30:00",
+        "estimatedTime": 1.0,
+        "group": true,
+        "significant": true
     }
+    
 ]
