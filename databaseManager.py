@@ -4,12 +4,13 @@ from datetime import datetime
 
 class Task:
 
-    def __init__(self, name : str, date : datetime, estimatedTime : int, group : bool, significant : bool):
+    def __init__(self, name : str, date : datetime, estimatedTime : int, group : bool, significant : bool, type : int):
         self.name = name
         self.date = date
         self.estimatedTime = estimatedTime
         self.group = group
         self.significant = significant
+        self.type = type
         
     
 
@@ -42,8 +43,8 @@ class DatabaseManager:
         with open(name + ".json", "w", encoding="utf-8") as f:
             json.dump([t.__dict__ for t in self.tasklist], f, default=str, indent=4)
 
-    def add_task(self, name : str, date : datetime, estimatedTime : int, group : bool, significant : bool, mood : int):
-        new_task = Task(name, date, estimatedTime, group, significant)
+    def add_task(self, name : str, date : datetime, estimatedTime : int, group : bool, significant : bool, mood : int, type : int):
+        new_task = Task(name, date, estimatedTime, group, significant, type)
         self.tasklist.append(new_task)
         self.taskprioritylist.append(0)
         self.calculate_task_priority(len(self.tasklist) - 1, mood)

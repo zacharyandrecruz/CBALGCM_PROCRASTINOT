@@ -4,70 +4,80 @@
         "date": "2026-08-20 09:00:00",
         "estimatedTime": 1.0,
         "group": false,
-        "significant": true
+        "significant": true,
+        "type": 1
     },
     {
         "name": "GELITWO Assignment",
         "date": "2026-08-20 11:00:00",
         "estimatedTime": 1.0,
         "group": false,
-        "significant": false
+        "significant": false,
+        "type": 0
     },
     {
         "name": "CXSY101 Project Proposal",
         "date": "2026-08-20 12:45:00",
         "estimatedTime": 2.0,
         "group": true,
-        "significant": true
+        "significant": true,
+        "type": 0
     },
     {
         "name": "CBETHIC Short Quiz",
         "date": "2026-08-21 11:00:00",
         "estimatedTime": 1.0,
         "group": false,
-        "significant": false
+        "significant": false,
+        "type": 1
     },
     {
         "name": "CSMATH2 Skim New Lesson",
         "date": "2026-08-24 09:15:00",
         "estimatedTime": 1.0,
         "group": false,
-        "significant": false
+        "significant": false,
+        "type": 0
     },
     {
         "name": "GELITWO Read new reading thingy yeah",
         "date": "2026-08-24 11:00:00",
         "estimatedTime": 1.0,
         "group": false,
-        "significant": false
+        "significant": false,
+        "type": 0
     },
     {
         "name": "CXSY101 Plan Project w/ Team",
         "date": "2026-08-24 12:45:00",
         "estimatedTime": 1.0,
         "group": true,
-        "significant": false
+        "significant": false,
+        "type": 0
     },
     {
         "name": "CBINOV3 Reading Stuff",
         "date": "2026-08-25 07:30:00",
         "estimatedTime": 1.0,
         "group": false,
-        "significant": false
+        "significant": false,
+        "type": 0
     },
     {
         "name": "CBETHIC Skim New Lesson",
         "date": "2026-08-25 11:00:00",
         "estimatedTime": 1.0,
         "group": false,
-        "significant": false
+        "significant": false,
+        "type": 0
     },
     {
         "name": "CBAPDEV Project Proposal",
         "date": "2026-08-25 14:30:00",
         "estimatedTime": 1.0,
         "group": true,
-        "significant": true
+        "significant": true,
+        "type": 0
     }
     
 ]
