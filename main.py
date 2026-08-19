@@ -226,6 +226,24 @@ def find_type0_conflictTasks(tasklist):
     return conflict_indices
 
 
+def get_conflict_groups(tasklist):
+    """
+    Groups type 0 ("Submit by") tasks that share the exact same due
+    date/time.
+
+    Returns:
+        list[list[Task]]: one list per group of 2+ conflicting tasks.
+    """
+    by_date = defaultdict(list)
+    for task in tasklist:
+        if task.type == 0:
+            by_date[task.date].append(task)
+    return [tasks for tasks in by_date.values() if len(tasks) > 1]
+
+
+
+
+
 def add_task_flow(dm, mood):
     """
     Collects all fields for a new task and adds it to the database.
@@ -394,6 +412,11 @@ def main():
         ui.clear_screen()
         ui.print_banner()
         ui.print_menu_title("PROCRASTINOT Task Manager")
+
+        conflict_count = len(get_conflict_groups(dm.tasklist))
+        if conflict_count:
+            ui.print_conflict_reminder(conflict_count)
+
         ui.print_menu_option(1, "Add a task")
         ui.print_menu_option(2, "Edit a task")
         ui.print_menu_option(3, "Remove a task")
