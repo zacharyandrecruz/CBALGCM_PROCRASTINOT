@@ -81,18 +81,18 @@
     },
     {
         "name": "CONFLICT Task",
-        "date": "2026-08-20 09:00:00",
+        "date": "2026-08-25 09:00:00",
         "estimatedTime": 1.0,
         "group": false,
         "significant": true,
         "type": 0
     },
     {
-        "name": "CONFLICT Task",
-        "date": "2026-08-20 09:00:00",
+        "name": "CONFLICT Task 2",
+        "date": "2026-08-25 09:00:00",
         "estimatedTime": 1.0,
         "group": false,
         "significant": true,
-        "type": 0
+        "type": 1
     }
 ]

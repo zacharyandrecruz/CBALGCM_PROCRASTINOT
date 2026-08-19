@@ -358,7 +358,7 @@ def view_tasks_flow(dm):
     Prints tasks grouped by category.
     """
     ui.print_section_header("View Tasks")
-    print("Legend: (!): means that this Do Now (High Priority) task should be prioritized over another task with the same deadline date and time in the same category.")
+    print("Legend: (!): means that this task should be prioritized over another task with the same deadline date and time in the same category.")
     if not dm.tasklist:
         ui.print_info("No tasks to show.\n")
         ui.prompt("Press Enter to continue...")
