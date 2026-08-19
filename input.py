@@ -21,16 +21,36 @@ FALSE_VALUES = {False, 0, "0", "n", "no", "false"}
 
 def collect_deadline_datetime():
     """
+    Prompts for the deadline: a date (MM/DD/YYYY or
+    MM/DD (deafault year) and a 24-hour time
+    (HH:MM). Re-prompts both fields together on any invalid input.
+
     Returns:
         datetime: the deadline as a datetime object.
     """
     while True:
         try:
-            year = int(input("Deadline year (e.g. 2026): "))
-            month = int(input("Deadline month (1-12): "))
-            day = int(input("Deadline day (1-31): "))
-            hour = int(input("Deadline hour (0-23): "))
-            minute = int(input("Deadline minute (0-59): "))
+            date_str = input("Deadline date (MM/DD/YYYY or MM/DD): ").strip()
+            time_str = input("Deadline time, 24-hour (HH:MM): ").strip()
+
+            date_parts = date_str.split("/")
+            if len(date_parts) == 3:
+                month_str, day_str, year_str = date_parts
+            elif len(date_parts) == 2:
+                month_str, day_str = date_parts
+                year_str = str(datetime.now().year)
+            else:
+                raise ValueError("date must be in MM/DD or MM/DD/YYYY format")
+
+            month = int(month_str)
+            day = int(day_str)
+            year = int(year_str)
+
+            time_parts = time_str.split(":")
+            if len(time_parts) != 2:
+                raise ValueError("time must be in HH:MM format")
+            hour = int(time_parts[0])
+            minute = int(time_parts[1])
 
             return datetime(year, month, day, hour, minute)
 
