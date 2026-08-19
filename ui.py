@@ -148,15 +148,14 @@ def print_task_line(task, color, has_conflict=False):
 # Conflict reminder (same-due-date tasks)
 # ---------------------------------------------------------------------------
 
-def print_conflict_reminder(count):
+def print_conflict_reminder():
     """
     Single line shown under the main menu title whenever two or more
     "Submit by" tasks share the exact same due date/time
     """
-    noun = "assessment" if count == 1 else "assessments"
     print(
         LIGHTRED
-        + f"  Note: you have {count} {noun} with the same due date/time. "
+        + f"Note: You have \"Submit By\" tasks with the same due date/time. "
         + "Consider starting one now or rescheduling one earlier.\n"
         + RESET
     )

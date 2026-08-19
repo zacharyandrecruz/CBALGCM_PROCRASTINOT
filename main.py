@@ -205,7 +205,6 @@ def ask_optional_deadline(current):
             return collect_deadline_datetime()
         ui.print_error("Please answer yes or no.\n")
 
-# fn for task flow 
 
 
 def find_type0_conflictTasks(tasklist):
@@ -359,12 +358,15 @@ def view_tasks_flow(dm):
     Prints tasks grouped by category.
     """
     ui.print_section_header("View Tasks")
+    print("Legend: (!): means that this Do Now (High Priority) task should be prioritized over another task with the same deadline date and time in the same category.")
     if not dm.tasklist:
         ui.print_info("No tasks to show.\n")
         ui.prompt("Press Enter to continue...")
         return
 
     conflict_indices = find_type0_conflictTasks(dm.tasklist)
+    if bool(get_conflict_groups(dm.tasklist)):
+        ui.print_conflict_reminder()
 
     grouped = {}
     for i, task in enumerate(dm.tasklist):
@@ -378,7 +380,7 @@ def view_tasks_flow(dm):
             continue
         label = CATEGORY_LABELS.get(category, f"Unknown ({category})")
         color = ui.print_category_header(label, category)
-        for task, has_conflict in tasks:          # <-- must unpack here
+        for task, has_conflict in tasks:       
             ui.print_task_line(task, color, has_conflict)
     print()
     ui.prompt("Press Enter to continue...")
@@ -412,10 +414,6 @@ def main():
         ui.clear_screen()
         ui.print_banner()
         ui.print_menu_title("PROCRASTINOT Task Manager")
-
-        conflict_count = len(get_conflict_groups(dm.tasklist))
-        if conflict_count:
-            ui.print_conflict_reminder(conflict_count)
 
         ui.print_menu_option(1, "Add a task")
         ui.print_menu_option(2, "Edit a task")
